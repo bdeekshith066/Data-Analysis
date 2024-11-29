@@ -8,7 +8,7 @@ def load_lottie_animation(file_path):
         return json.load(f)
 
 # Set file paths for Lottie animations
-animation1 = load_lottie_animation("assets/animation1.json")
+animation1 = load_lottie_animation("animation1.json")
 animation2 = load_lottie_animation("assets/animation2.json")
 animation3 = load_lottie_animation("assets/animation3.json")
 animation4 = load_lottie_animation("assets/animation4.json")
