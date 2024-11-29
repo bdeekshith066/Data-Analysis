@@ -4,3 +4,4 @@ numpy
 seaborn
 matplotlib
 streamlit_option_menu
+streamlit-lottie
