@@ -8,15 +8,15 @@ def load_lottie_animation(file_path):
         return json.load(f)
 
 # Set file paths for Lottie animations
-animation1 = load_lottie_animation("./assets/animation1.json")
-animation2 = load_lottie_animation("assets/animation2.json")
-animation3 = load_lottie_animation("assets/animation3.json")
-animation4 = load_lottie_animation("assets/animation4.json")
-animation5 = load_lottie_animation("assets/animation5.json")
-animation6 = load_lottie_animation("assets/animation6.json")
-animation7 = load_lottie_animation("assets/animation7.json")
-animation8 = load_lottie_animation("assets/animation8.json")
-animation9 = load_lottie_animation("assets/animation9.json")
+animation1 = load_lottie_animation("assets/Animation1.json")
+animation2 = load_lottie_animation("assets/Animation2.json")
+animation3 = load_lottie_animation("assets/Animation3.json")
+animation4 = load_lottie_animation("assets/Animation4.json")
+animation5 = load_lottie_animation("assets/Animation5.json")
+animation6 = load_lottie_animation("assets/Animation6.json")
+animation7 = load_lottie_animation("assets/Animation7.json")
+animation8 = load_lottie_animation("assets/Animation8.json")
+animation9 = load_lottie_animation("assets/Animation9.json")
 
 def app():
     # Set catchy title and subtitle
