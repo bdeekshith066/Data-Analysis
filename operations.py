@@ -1,46 +1,36 @@
 import streamlit as st
 import pandas as pd
 
-# Function to upload files
 def upload_files():
-    col1, col2, col4, col3 = st.columns([1, 1, 0.2, 1])  # Creating 4 columns
+    col1, col2, col4, col3 = st.columns([1, 1, 0.2, 1])  
     
     df1, df2 = None, None  # Initialize as None
     
     with col1:
-        # File upload for Excel File 1
         uploaded_file1 = st.file_uploader("Upload Excel File 1", type=["xlsx"], key="file1")
         
         if uploaded_file1 is not None:
-            # Read the uploaded file into pandas dataframe
             df1 = pd.read_excel(uploaded_file1)
-            # Display Data overview for Excel File 1
             st.write("**:orange[DataSet 1 Overview]**")
             st.write(f"Total Rows: {df1.shape[0]} || Total Columns: {df1.shape[1]}")
             st.dataframe(df1.head(16))  
 
     with col2:
-        # File upload for Excel File 2
         uploaded_file2 = st.file_uploader("Upload Excel File 2", type=["xlsx"], key="file2")
         
         if uploaded_file2 is not None:
-            # Read the uploaded file into pandas dataframe
             df2 = pd.read_excel(uploaded_file2)
-            # Display Data overview for Excel File 2
             st.write("**:orange[DataSet 2 Overview]**")
             st.write(f"Total Rows: {df2.shape[0]} || Total Columns: {df2.shape[1]}")
             st.dataframe(df2.head(16))  
         
     with col3:
-        # Display videos
         st.video("videos/Inner.mp4", autoplay=True, loop=True, muted=True)
         st.video("videos/Outer.mp4", autoplay=True, loop=True, muted=True)
         st.video("videos/Left.mp4", autoplay=True, loop=True, muted=True)
         
     return df1, df2
 
-
-# Main function for the operations page
 def app():
     st.title("Walkthrough of Various Data Analysis Operations")
     
@@ -58,14 +48,33 @@ def app():
             axis = st.selectbox("Select Axis", ["0 (Vertical)", "1 (Horizontal)"])
             axis = 0 if axis == "0 (Vertical)" else 1
             st.write(f"Concatenating along axis {axis}")
-            result = pd.concat([df1, df2], axis=axis)
-            st.write("### Result of Concatenation:")
-            st.dataframe(result)
+
+            # Check for duplicate column names if concatenating horizontally
+            if axis == 1:  # Horizontal Concatenation
+                # Check for duplicate column names
+                common_columns = df1.columns.intersection(df2.columns).tolist()
+                if common_columns:
+                    # Add suffix to columns with the same name in both dataframes
+                    df1 = df1.rename(columns={col: f"{col}_df1" for col in common_columns})
+                    df2 = df2.rename(columns={col: f"{col}_df2" for col in common_columns})
+                    st.warning(f"Duplicate columns found: {common_columns}. Suffixes added to make column names unique.")
+                
+                # Perform the horizontal concatenation after renaming duplicate columns
+                result = pd.concat([df1, df2], axis=axis)
+                st.write("### Result of Horizontal Concatenation:")
+                st.dataframe(result)
+
+            elif axis == 0:  # Vertical Concatenation
+                # Perform vertical concatenation
+                result = pd.concat([df1, df2], axis=axis)
+                st.write("### Result of Vertical Concatenation:")
+                st.dataframe(result)
 
         elif operation == "Merge":
             st.write("### Merge Operation: You need at least one common column to merge.")
             how = st.selectbox("Select Join Type", ["inner", "outer", "left", "right"])
             on_column = st.text_input("Enter common column name to merge on (e.g., 'ID')")
+            
             if on_column:
                 try:
                     result = pd.merge(df1, df2, how=how, on=on_column)
@@ -98,7 +107,6 @@ def app():
             except Exception as e:
                 st.error(f"Error during Join operation: {str(e)}")
 
-
         elif operation == "Intersection":
             st.write("### Intersection Operation: Returns only the rows with common index and columns in both dataframes.")
             try:
@@ -107,10 +115,9 @@ def app():
                 st.dataframe(result)
             except Exception as e:
                 st.error(f"Error during Intersection operation: {str(e)}")
+
     else:
         st.warning("Please upload both files to proceed with operations.")
 
-
-# Run the app
 if __name__ == "__main__":
     app()
